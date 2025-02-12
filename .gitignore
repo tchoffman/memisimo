@@ -1,0 +1,5 @@
+#ignore assets
+assets/
+
+#ignore .pyc files
+*.pyc
