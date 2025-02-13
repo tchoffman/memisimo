@@ -30,5 +30,8 @@ class InboundMmsMessage(InboundMessage):
     type: MessageType = MessageType.MMS
     xillio_id: str
 
+class OutboundMessage(Message):
+    direction = MessageDirection.OUTBOUND
+
 
 
