@@ -19,14 +19,15 @@ class Message(BaseModel):
     attachments: Optional[List[str]] = None
     timestamp: datetime
 
-class InboundSmsMessage(Message):
+class InboundMessage(Message):
+    direction = MessageDirection.INBOUND
+
+class InboundSmsMessage(InboundMessage):
     type: MessageType = MessageType.SMS
-    direction: MessageDirection = MessageDirection.INBOUND
     xillio_id: str
 
-class InboundMmsMessage(Message):
+class InboundMmsMessage(InboundMessage):
     type: MessageType = MessageType.MMS
-    direction: MessageDirection = MessageDirection.INBOUND
     xillio_id: str
 
 
