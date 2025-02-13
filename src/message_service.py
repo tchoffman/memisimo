@@ -1,3 +1,4 @@
+from message_db import Contact, Conversation
 from src.message_models import InboundMessage, OutboundMessage
 import logging
 
@@ -7,13 +8,23 @@ logger = logging.getLogger(__name__)
 
 class MessageService:
     def __init__(self, db_session):
-        self.db_session = db_session
+        self.db = db_session
 
-    def _get_or_create_contact(self):
-        pass
+    def _get_or_create_contact(self, connection, type):
+        contact = self.db.query(Contact).filter_by(connection=connection).first()
+        if not contact:
+            contact = Contact(connection=connection, type=type)
+            self.db.add(contact)
+            self.db.commit()
+        return contact
 
-    def _get_or_create_conversation(self):
-        pass
+    def _get_or_create_conversation(self, contact_id):
+        conversation = self.db.query(Conversation).filter_by(contact_id=contact_id).first()
+        if not conversation:
+            conversation = Conversation(contact_id=contact_id)
+            self.db.add(conversation)
+            self.db.commit()
+        return conversation
 
     def process_inbound_message(self, message: InboundMessage):
         try:
