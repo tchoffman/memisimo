@@ -21,6 +21,7 @@ class Message(BaseModel):
 
 class InboundMessage(Message):
     direction = MessageDirection.INBOUND
+    type: MessageType
 
 class InboundSmsMessage(InboundMessage):
     type: MessageType = MessageType.SMS

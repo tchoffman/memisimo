@@ -35,3 +35,5 @@ class Conversation(Base):
 
     id = Column(Integer, primary_key=True)
     contact_id = Column(Integer, ForeignKey("contacts.id"))
+
+Base.metadata.create_all(engine)

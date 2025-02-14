@@ -1,4 +1,4 @@
-from message_db import Contact, Conversation
+from message_db import Contact, Conversation, Message
 from src.message_models import InboundMessage, OutboundMessage
 import logging
 
@@ -28,11 +28,28 @@ class MessageService:
 
     def process_inbound_message(self, message: InboundMessage):
         try:
-            # TODO: Determine "Contact" - Get OR Create Contact
-            # TODO: Determine "Conversation" - Get OR Create Conversation
-            # TODO: Persist Message / Conversation to Database
-            print(f"Received message from {message.from_address} to {message.to_address} at {message.timestamp}")
-            return {"response": "Message Processed"}
+            # Determine "Contact"
+            contact_type = "phone" if message.type in ["sms", "mms"] else "email" # TODO: Should rely on an Enum/Map of message type to contact type.
+            contact = self._get_or_create_contact(message.from_address, contact_type)
+
+            # Determine "Conversation"
+            conversation = self._get_or_create_conversation(contact.id)
+
+            # Persist Message / Conversation to Database
+            # TODO: Naming of Pydantic and SQLAlchemy models confusing/clashing
+            message = Message(
+                from_address=message.from_address,
+                to_address=message.to_address,
+                type=message.type,
+                xillio_id=message.xillio_id,
+                body=message.body,
+                timestamp=message.timestamp,
+                conversation_id=conversation.id
+            )
+            self.db.add(message)
+            self.db.commit()
+            return message
+        
         except Exception as e:
             logger.error(f"Error processing inbound message: {str(e)}")
 
