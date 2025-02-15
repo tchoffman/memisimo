@@ -1,12 +1,11 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Enum
-from sqlalchemy.orm import DeclarativeBase, relationship, sessionmaker
+from sqlalchemy.orm import declarative_base, relationship, sessionmaker
 from sqlalchemy import create_engine
 
 engine = create_engine("sqlite:///./memisimo.db")
 SessionLocal = sessionmaker(bind=engine)
 
-class Base(DeclarativeBase):
-    pass
+Base = declarative_base()
 
 class Message(Base):
     __tablename__ = "messages"

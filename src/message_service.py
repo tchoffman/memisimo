@@ -1,4 +1,4 @@
-from message_db import Contact, Conversation, Message
+from src.message_db import Contact, Conversation, Message
 from src.message_models import InboundMessage, OutboundMessage
 import logging
 

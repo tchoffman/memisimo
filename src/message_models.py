@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import Enum
-from typing import List, Optional, Union
+from typing import ClassVar, List, Optional, Union
 from pydantic import BaseModel
 
 
@@ -20,7 +20,7 @@ class Message(BaseModel):
     timestamp: datetime
 
 class InboundMessage(Message):
-    direction = MessageDirection.INBOUND
+    direction: ClassVar[MessageDirection] = MessageDirection.INBOUND
     type: MessageType
 
 class InboundSmsMessage(InboundMessage):
@@ -32,7 +32,7 @@ class InboundMmsMessage(InboundMessage):
     xillio_id: str
 
 class OutboundMessage(Message):
-    direction = MessageDirection.OUTBOUND
+    direction: ClassVar[MessageDirection] = MessageDirection.OUTBOUND
 
 
 

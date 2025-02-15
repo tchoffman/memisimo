@@ -65,7 +65,8 @@ def test_from_address_required():
             body="Bring Donuts!",
             timestamp="2021-01-01T00:00:00Z"
         )
-    assert str(e.value) == "1 validation error for Message\nfrom_address\n  field required (type=value_error.missing)"
+    assert "field required" in str(e.value).lower()
+    assert "from_address" in str(e.value).lower()
 
 def test_to_address_required():
     with pytest.raises(ValueError) as e:
@@ -74,7 +75,8 @@ def test_to_address_required():
             body="Bring Donuts!",
             timestamp="2021-01-01T00:00:00Z"
         )
-    assert str(e.value) == "1 validation error for Message\nto_address\n  field required (type=value_error.missing)"
+    assert "field required" in str(e.value).lower()
+    assert "to_address" in str(e.value).lower()
 
 def test_body_required():
     with pytest.raises(ValueError) as e:
@@ -83,8 +85,9 @@ def test_body_required():
             to_address="0987654321",
             timestamp="2021-01-01T00:00:00Z"
         )
-    assert str(e.value) == "1 validation error for Message\nbody\n  field required (type=value_error.missing)"
-    
+    assert "field required" in str(e.value).lower()
+    assert "body" in str(e.value).lower()
+
 def test_timestamp_required():
     with pytest.raises(ValueError) as e:
         message = Message(
@@ -92,4 +95,5 @@ def test_timestamp_required():
             to_address="0987654321",
             body="Bring Donuts!"
         )
-    assert str(e.value) == "1 validation error for Message\ntimestamp\n  field required (type=value_error.missing)"
+    assert "field required" in str(e.value).lower()
+    assert "timestamp" in str(e.value).lower()

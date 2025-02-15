@@ -3,3 +3,7 @@ assets/
 
 #ignore .pyc files
 *.pyc
+
+# ignore local DB
+memisimo.DB
+
