@@ -17,11 +17,13 @@ http://127.0.0.1:8000/docs
 curl -X POST http://localhost:8000/webhook/sms \
   -H "Content-Type: application/json" \
   -d '{
-    "from_address": "1234567890",
-    "to_address": "0987654321",
-    "body": "Test message",
-    "timestamp": "2024-02-15T00:00:00Z",
-    "xillio_id": "1234"
+    "from": "+18045551234",
+    "to": "+12016661234",
+    "type": "sms",
+    "xillio_id": "message-1",
+    "body": "text message",
+    "attachments": null,
+    "timestamp": "2024-11-01T14:00:00Z"
   }'
 ```
 
@@ -30,15 +32,30 @@ curl -X POST http://localhost:8000/webhook/sms \
 curl -X POST http://localhost:8000/webhook/mms \
   -H "Content-Type: application/json" \
   -d '{
-    "from_address": "1234567890",
-    "to_address": "0987654321",
-    "body": "Test message with attachment",
-    "timestamp": "2024-02-15T00:00:00Z",
-    "xillio_id": "1234",
-    "attachments": ["http://example.com/image.jpg"]
+    "from": "+18045551234",
+    "to": "+12016661234",
+    "type": "mms",
+    "xillio_id": "message-2",
+    "body": "text message",
+    "attachments": ["attachment-url"],
+    "timestamp": "2024-11-01T14:00:00Z"
   }'
 ```
 
+### Send Email Message
+```
+curl -X POST http://localhost:8000/webhook/email \
+  -H "Content-Type: application/json" \
+  -d '{
+    "from": "user@memisimo.com",
+    "to": "contact@gmail.com",
+    "type": "email",
+    "xillio_id": "message-2",
+    "body": "<html><body>html is <b>allowed</b> here </body></html>",
+    "attachments": ["attachment-url"],
+    "timestamp": "2024-11-01T14:00:00Z"
+  }'
+```
 ## Inspect Local DB
 
 - Start SQLite with `sqlite3 ./memisimo.db

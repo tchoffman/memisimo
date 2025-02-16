@@ -1,7 +1,7 @@
 from datetime import datetime
 from enum import Enum
 from typing import ClassVar, List, Optional, Union
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class MessageType(str, Enum):
@@ -14,8 +14,8 @@ class MessageDirection(str, Enum):
     OUTBOUND = "outbound"
 
 class Message(BaseModel):
-    from_address: str
-    to_address: str
+    from_address: str = Field(alias="from")
+    to_address: str = Field(alias="to")
     body: str
     attachments: Optional[List[str]] = None
     timestamp: datetime
