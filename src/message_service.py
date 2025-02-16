@@ -1,5 +1,5 @@
 from src.message_db import Contact, Conversation, Message
-from src.message_models import InboundMessage, OutboundMessage
+from src.message_models import InboundMessage, MessageType, OutboundMessage
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -37,13 +37,15 @@ class MessageService:
 
             # Persist Message / Conversation to Database
             message = Message(
+                conversation_id=conversation.id,
+                contact_id=contact.id,
                 from_address=message.from_address,
                 to_address=message.to_address,
                 type=message.type,
                 xillio_id=message.xillio_id,
                 body=message.body,
-                timestamp=message.timestamp,
-                conversation_id=conversation.id
+                attachments=str(message.attachments),
+                timestamp=message.timestamp
             )
             self.db.add(message)
             self.db.commit()
@@ -51,6 +53,8 @@ class MessageService:
         
         except Exception as e:
             logger.error(f"Error processing inbound message: {str(e)}")
+            self.db.rollback()
+            raise e
 
     def process_outbound_message(self, message: OutboundMessage):
         #TODO: Determine "Contact" - Get OR Create Contact
