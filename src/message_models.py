@@ -7,6 +7,7 @@ from pydantic import BaseModel
 class MessageType(str, Enum):
     SMS = "sms"
     MMS = "mms"
+    EMAIL = "email"
 
 class MessageDirection(str, Enum):
     INBOUND = "inbound"
@@ -29,6 +30,10 @@ class InboundSmsMessage(InboundMessage):
 
 class InboundMmsMessage(InboundMessage):
     type: MessageType = MessageType.MMS
+    xillio_id: str
+
+class InboundEmailMessage(InboundMessage):
+    type: MessageType = MessageType.EMAIL
     xillio_id: str
 
 class OutboundMessage(Message):

@@ -18,7 +18,7 @@ class Message(Base):
     contact_id = Column(Integer, ForeignKey("contacts.id"))
     from_address = Column(String, nullable=False)
     to_address = Column(String, nullable=False)
-    type = Column(Enum("sms", "mms"), nullable=False)
+    type = Column(Enum("sms", "mms", "email"), nullable=False)
     xillio_id = Column(String, nullable=False)
     body = Column(String, nullable=False)
     attachments = Column(String)

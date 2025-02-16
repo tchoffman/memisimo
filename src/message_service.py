@@ -29,14 +29,13 @@ class MessageService:
     def process_inbound_message(self, message: InboundMessage):
         try:
             # Determine "Contact"
-            contact_type = "phone" if message.type in ["sms", "mms"] else "email" # TODO: Should rely on an Enum/Map of message type to contact type.
+            contact_type = "phone" if message.type in ["sms", "mms"] else "email" # TODO: Feels sketchy
             contact = self._get_or_create_contact(message.from_address, contact_type)
 
             # Determine "Conversation"
             conversation = self._get_or_create_conversation(contact.id)
 
             # Persist Message / Conversation to Database
-            # TODO: Naming of Pydantic and SQLAlchemy models confusing/clashing
             message = Message(
                 from_address=message.from_address,
                 to_address=message.to_address,
