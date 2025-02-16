@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException, Depends
 from sqlalchemy.orm import Session
 import logging
 
-from src.message_db import SessionLocal
+from src.message_db import Base, Message, SessionLocal, engine
 from src.message_service import MessageService
 from src.message_models import InboundMmsMessage, InboundSmsMessage
 
@@ -11,12 +11,37 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
+Base.metadata.create_all(bind=engine)
+
 def get_db():
     try:
         db = SessionLocal()
         yield db
     finally:
         db.close()
+
+@app.get("/debug/messages")
+async def get_messages(db: Session = Depends(get_db)):
+    try:
+        messages = db.query(Message).all()
+        return {
+            "messages": [
+                {
+                    "id": m.id,
+                    "body": m.body,
+                    "from": m.from_address,
+                    "to": m.to_address,
+                    "timestamp": m.timestamp.isoformat() if m.timestamp else None
+                } 
+                for m in messages
+            ]
+        }
+    except Exception as e:
+        logger.error(f"Error fetching messages: {str(e)}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Internal server error: {str(e)}"
+        )
 
 @app.post("/webhook/sms")
 async def receive_sms(
