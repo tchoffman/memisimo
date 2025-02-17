@@ -56,6 +56,24 @@ curl -X POST http://localhost:8000/webhook/email \
     "timestamp": "2024-11-01T14:00:00Z"
   }'
 ```
+
+### Mock Outbound
+```
+curl -X POST http://localhost:8000/send \                                                                 ─╯
+  -H "Content-Type: application/json" \
+  -d '{
+  "from": "123",
+  "to": "345",
+  "body": "donuts!",
+  "xillio_id":"5",
+  "attachments": [
+    "donut-menu.json"
+  ],
+  "timestamp": "2025-02-17T00:31:24.616Z",
+  "type": "sms"
+}'
+```
+
 ## Inspect Local DB
 
 - Start SQLite with `sqlite3 ./memisimo.db
@@ -65,6 +83,7 @@ curl -X POST http://localhost:8000/webhook/email \
 .tables                  -- Show all tables
 SELECT * FROM messages;  -- View messages table
 SELECT * FROM contacts;  -- View contacts table
+SELECT * FROM conversations;
 .schema                 -- View database schema
 .quit                   -- Exit SQLite CLI
 ```
@@ -74,4 +93,4 @@ SELECT * FROM contacts;  -- View contacts table
 - then... `open -a "DB Browser for SQLite" ./memisimo.db`
 
 ## Debug Endpoint for DB
-- `curl http://localhost:8000
+- Curl or Nav to `http://127.0.0.1:8000/debug/messages`
