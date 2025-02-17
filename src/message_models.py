@@ -38,6 +38,8 @@ class InboundEmailMessage(InboundMessage):
 
 class OutboundMessage(Message):
     direction: ClassVar[MessageDirection] = MessageDirection.OUTBOUND
+    type: MessageType
+    xillio_id: str
 
 
 

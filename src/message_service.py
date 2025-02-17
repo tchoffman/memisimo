@@ -57,9 +57,41 @@ class MessageService:
             raise e
 
     def process_outbound_message(self, message: OutboundMessage):
-        #TODO: Determine "Contact" - Get OR Create Contact
-        #TODO: Determine "Conversation" - Get OR Create Conversation
-        #TODO: Persist Message / Conversation to Database
-        pass
+        try:
+            contact = self._get_or_create_contact(message.to_address, "phone")
+            conversation = self._get_or_create_conversation(contact.id)
+            message = Message(
+                conversation_id=conversation.id,
+                contact_id=contact.id,
+                from_address=message.from_address,
+                to_address=message.to_address,
+                type=message.type,
+                xillio_id=message.xillio_id,
+                body=message.body,
+                attachments=str(message.attachments),
+                timestamp=message.timestamp
+            )
+            self.db.add(message)
+            self.db.commit()
+            logger.info(f"Persisted Outbound Message: {message}")
+        except Exception as e:
+            logger.error(f"Error processing outbound message: {str(e)}")
+            self.db.rollback()
+            raise e
+
+        try:
+            if message.type in [MessageType.SMS, MessageType.MMS]:
+                # TODO: Implement Send SMS/MMS
+                logger.info(f"POSTING SMS to  www.provider.app/api/messages")
+            elif message.type == MessageType.EMAIL:
+                logger.info(f"POSTING EMAIL to  www.mailplus.app/api/email")
+            else:
+                raise ValueError(f"Invalid message type: {message.type}")
+        except Exception as e:
+            logger.error(f"Error sending message: {str(e)}")
+            raise e
+
+        return message
+
 
         

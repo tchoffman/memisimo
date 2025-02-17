@@ -4,7 +4,12 @@ import logging
 
 from src.message_db import Base, Message, SessionLocal, engine
 from src.message_service import MessageService
-from src.message_models import InboundEmailMessage, InboundMmsMessage, InboundSmsMessage
+from src.message_models import (
+    InboundEmailMessage, 
+    InboundMmsMessage, 
+    InboundSmsMessage, 
+    OutboundMessage
+)
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -81,3 +86,17 @@ async def receive_email(
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     return {"response": "Inbound Email Received"}
+
+
+@app.post("/send")
+async def send_message(
+    message: OutboundMessage, 
+    db: Session = Depends(get_db)
+):
+    logger.info(f"Sending message from {message.from_address} to {message.to_address} at {message.timestamp}")
+    service = MessageService(db)
+    try:
+        service.process_outbound_message(message)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    return {"response": "Outbound Message Sent"}
